@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 from tkinter import messagebox as mb
 import time
 
-def create_image_from_array(data, name, extension, color):
+def create_image_from_array(data, name, extension, color, color_format):
     width = len(data)
     height = 1
     pixels = []
@@ -28,6 +28,8 @@ def create_image_from_array(data, name, extension, color):
                 pixels.append((r, g, b))
 
     image.putdata(pixels)
+    if color_format == 'CMYK':
+        image = image.convert('CMYK')
     image.save(f'{name}.{extension}')
     print(f"Изображение сохранено как {name}.{extension}")
 
@@ -39,6 +41,7 @@ layout = [[sg.Titlebar("Txt2Img")],
             [sg.Push(), sg.Text("Имя: "), sg.InputText("output", size=(10)), sg.Push()],
             [sg.Push(), sg.Text("Расширение: "), sg.Combo(['png', 'jpg', 'WebP', 'ico', 'bmp'], default_value='png'), sg.Push()],
             [sg.Push(), sg.Text("Цвет картинки: "), sg.Combo(['Цветная', 'Черно-белая'], default_value='Цветная'), sg.Push()],
+            [sg.Push(), sg.Text("Формат цвета: "), sg.Combo(['RGB', 'CMYK'], default_value='RGB'), sg.Push()],
             [sg.ProgressBar(100, key='-PROGRESS_BAR-', size=(22, 10), bar_color=('green', 'white'))],
             [sg.VPush()],
             [sg.Button('Отмена', button_color='#613434'), sg.Push(), sg.Button('Старт', button_color='#128700')],
@@ -50,6 +53,7 @@ count = 0
 input_string = ''
 color = 'Цветная'
 name = 'output'
+color_format = 'RGB'
 
 while True:
     event, values = window.read()
@@ -84,7 +88,7 @@ while True:
             for count in range(100):
                 window['-PROGRESS_BAR-'].update(current_count=count)
                 time.sleep(0.015)
-            create_image_from_array(array, name, extension, color)
+            create_image_from_array(array, name, extension, color, color_format)
             mb.showinfo(title='Text2Image', message=f'Изображение закодировано и сохранено как {name}.{extension}')
 
     elif event == 'Отмена' or event == sg.WIN_CLOSED:
