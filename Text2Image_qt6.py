@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QMessageBox,
 )
-from PyQt6.QtGui import QColor, QFont, QIcon, QPixmap
+from PyQt6.QtGui import QFont, QIcon
 from PyQt6.QtCore import Qt
 import sys
 import time
@@ -40,12 +40,12 @@ class Txt2Img(QWidget):
         # Создаем основной вертикальный макет
         v_layout = QVBoxLayout(self)
 
-        self.setWindowTitle("BlueBrowse")
+        self.setWindowTitle("Text 2 Image")
         self.setWindowIcon(QIcon(os.path.join('images', 'icon.png')))
 
         # Заголовок
-        title_label = QLabel("Text2Image", alignment=Qt.AlignmentFlag.AlignCenter)
-        title_font = QFont("Arial", 20, QFont.Weight.Bold)
+        title_label = QLabel("Text 2 Image", alignment=Qt.AlignmentFlag.AlignCenter)
+        title_font = QFont("Dungeon", 20, QFont.Weight.Bold)
         title_label.setFont(title_font)
         v_layout.addWidget(title_label)
 
