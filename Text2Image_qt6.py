@@ -14,28 +14,38 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QMessageBox,
 )
-from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtGui import QColor, QFont, QIcon, QPixmap
 from PyQt6.QtCore import Qt
 import sys
 import time
+import os
 
 
 class Txt2Img(QWidget):
     def __init__(self):
+        print("___________                  __     ________    .__                                        ")
+        print("\__    ___/  ___  ___  ___ _/  |_   \_____  \   |__|    _____   _____       ____    ____  ")
+        print("  |    |   / __ \ \  \/  / \   __\   /  ____/   |  |   /     \  \__  \     / ___\  / __ \ ")
+        print("  |    |  \  ___/  >    <   |  |    /       \   |  |  /  Y Y  \  / __ \   /_/    > | ___/ ")
+        print("  |____|   \___   >__/\_ \  |__|    \_______ \  |__| (  _|_|   ) (____ /  \___  /  \___  >") 
+        print("                                                                          _____/          ")
         super().__init__()
 
         # Устанавливаем название окна
         self.setWindowTitle("Txt2Img")
 
         # Задаем размер окна
-        self.resize(400, 300)
+        self.resize(230, 300)
 
         # Создаем основной вертикальный макет
         v_layout = QVBoxLayout(self)
 
+        self.setWindowTitle("BlueBrowse")
+        self.setWindowIcon(QIcon(os.path.join('images', 'icon.png')))
+
         # Заголовок
         title_label = QLabel("Text2Image", alignment=Qt.AlignmentFlag.AlignCenter)
-        title_font = QFont("Arial", 16, QFont.Weight.Bold)
+        title_font = QFont("Arial", 20, QFont.Weight.Bold)
         title_label.setFont(title_font)
         v_layout.addWidget(title_label)
 
@@ -93,10 +103,10 @@ class Txt2Img(QWidget):
 
         # Кнопки Старт и Отмена
         h_buttons_layout = QHBoxLayout()
-        start_button = QPushButton("Старт")
-        start_button.clicked.connect(self.start_conversion)
         cancel_button = QPushButton("Отмена")
         cancel_button.clicked.connect(self.close)
+        start_button = QPushButton("Старт")
+        start_button.clicked.connect(self.start_conversion)
         h_buttons_layout.addWidget(start_button)
         h_buttons_layout.addWidget(cancel_button)
         v_layout.addLayout(h_buttons_layout)
@@ -178,13 +188,11 @@ class Txt2Img(QWidget):
 
 def create_image_from_array(data, name, extension, color, color_format):
     """
-    Функция для создания изображения из массива данных.
-    
-    :param data: Массив данных, представляющий пиксели изображения.
-    :param name: Имя файла для сохранения.
-    :param extension: Расширение файла.
-    :param color: Тип изображения ('Цветная' или 'Черно-белая').
-    :param color_format: Цветовой формат ('RGB' или 'CMYK').
+    data: Массив данных, представляющий пиксели изображения
+    name: Имя файла для сохранения
+    extension: Расширение файла
+    color: Тип изображения ('Цветная' или 'Черно-белая')
+    color_format: Цветовой формат ('RGB' или 'CMYK')
     """
     width = len(data)
     height = 1
