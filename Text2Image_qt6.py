@@ -13,12 +13,15 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QMessageBox,
+    QScrollArea,
+    QSlider,
 )
-from PyQt6.QtGui import QFont, QIcon
+from PyQt6.QtGui import QFont, QIcon, QTransform, QPixmap
 from PyQt6.QtCore import Qt
 import sys
 import time
 import os
+import subprocess
 
 
 class Txt2Img(QWidget):
@@ -32,7 +35,7 @@ class Txt2Img(QWidget):
         super().__init__()
 
         # Устанавливаем название окна
-        self.setWindowTitle("Txt2Img")
+        self.setWindowTitle("Text 2 Image")
 
         # Задаем размер окна
         self.resize(230, 300)
@@ -119,6 +122,9 @@ class Txt2Img(QWidget):
         self.color = "Цветная"
         self.color_format = "RGB"
 
+    def loading_done(self):
+        pass
+
     def load_text_file(self):
         """Метод для открытия диалога выбора файла"""
         file_dialog = QFileDialog.getOpenFileName(
@@ -173,18 +179,8 @@ class Txt2Img(QWidget):
 
     def closeEvent(self, event):
         """Обработчик закрытия окна"""
-        reply = QMessageBox.question(
-            self,
-            "Подтверждение",
-            "Вы уверены, что хотите закрыть приложение?",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-            QMessageBox.StandardButton.No,
-        )
-        if reply == QMessageBox.StandardButton.Yes:
-            event.accept()
-        else:
-            event.ignore()
 
+        event.accept()
 
 def create_image_from_array(data, name, extension, color, color_format):
     """
