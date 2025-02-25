@@ -1,3 +1,4 @@
+# Импорт необходимых библиотек
 from PIL import Image
 from pathlib import Path
 from PyQt6.QtWidgets import (
@@ -32,16 +33,16 @@ class Txt2Img(QWidget):
         # Создаем основной вертикальный макет
         v_layout = QVBoxLayout(self)
         
-        self.setWindowTitle("Text 2 Image")
+        # Устанавливаем иконку окна
         self.setWindowIcon(QIcon(os.path.join('images', 'icon.png')))
 
-        # Заголовок
+        # Создаем заголовок
         title_label = QLabel("Text 2 Image", alignment=Qt.AlignmentFlag.AlignCenter)
         title_font = QFont("Dungeon", 20, QFont.Weight.Bold)
         title_label.setFont(title_font)
         v_layout.addWidget(title_label)
 
-        # Горизонтальный макет для кнопки загрузки файла
+        # Создаем кнопку загрузки файла
         h_load_file_layout = QHBoxLayout()
         load_button = QPushButton("Загрузить")
         load_button.clicked.connect(self.load_text_file)
@@ -50,7 +51,7 @@ class Txt2Img(QWidget):
         h_load_file_layout.addStretch()
         v_layout.addLayout(h_load_file_layout)
 
-        # Поле ввода имени файла
+        # Создаем поле ввода имени файла
         h_name_layout = QHBoxLayout()
         name_label = QLabel("Имя:")
         self.name_input = QLineEdit("output")
@@ -58,7 +59,7 @@ class Txt2Img(QWidget):
         h_name_layout.addWidget(self.name_input)
         v_layout.addLayout(h_name_layout)
 
-        # Комбо-бокс для выбора расширения файла
+        # Создаем выпадающий список для выбора расширения файла
         h_extension_layout = QHBoxLayout()
         extension_label = QLabel("Расширение:")
         self.extension_combo_box = QComboBox()
@@ -68,7 +69,7 @@ class Txt2Img(QWidget):
         h_extension_layout.addWidget(self.extension_combo_box)
         v_layout.addLayout(h_extension_layout)
 
-        # Комбо-бокс для выбора типа изображения (цветное/черно-белое)
+        """# Создаем выпадающий список для выбора типа изображения
         h_color_type_layout = QHBoxLayout()
         color_type_label = QLabel("Тип изображения:")
         self.color_type_combo_box = QComboBox()
@@ -76,9 +77,9 @@ class Txt2Img(QWidget):
         self.color_type_combo_box.setCurrentIndex(0)
         h_color_type_layout.addWidget(color_type_label)
         h_color_type_layout.addWidget(self.color_type_combo_box)
-        v_layout.addLayout(h_color_type_layout)
+        v_layout.addLayout(h_color_type_layout)"""
 
-        # Комбо-бокс для выбора цветового формата (RGB/CMYK)
+        # Создаем выпадающий список для выбора цветового формата
         h_color_format_layout = QHBoxLayout()
         color_format_label = QLabel("Цветовой формат:")
         self.color_format_combo_box = QComboBox()
@@ -88,12 +89,12 @@ class Txt2Img(QWidget):
         h_color_format_layout.addWidget(self.color_format_combo_box)
         v_layout.addLayout(h_color_format_layout)
 
-        # Прогресс бар
+        # Создаем прогресс бар
         self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
         v_layout.addWidget(self.progress_bar)
 
-        # Кнопки Старт и Отмена
+        # Создаем кнопки Старт и Отмена
         h_buttons_layout = QHBoxLayout()
         cancel_button = QPushButton("Отмена")
         cancel_button.clicked.connect(self.close)
@@ -103,10 +104,21 @@ class Txt2Img(QWidget):
         h_buttons_layout.addWidget(cancel_button)
         v_layout.addLayout(h_buttons_layout)
 
-        # Добавляем кнопку переключения темы
+        # Создаем кнопку переключения темы
         self.theme_button = QPushButton("🌙 Темная тема")
         self.theme_button.clicked.connect(self.toggle_theme)
-        v_layout.addWidget(self.theme_button)
+
+        # Создаем кнопку для выбора папки сохранения
+        import getpass
+        username = getpass.getuser()
+        print(username)
+        self.output_folder = f'C://'
+        self.choose_folder_button = QPushButton("📁 Выбрать папку")
+        self.choose_folder_button.clicked.connect(self.choose_output_folder)
+        h_theme_folder_layout = QHBoxLayout()
+        h_theme_folder_layout.addWidget(self.theme_button)
+        h_theme_folder_layout.addWidget(self.choose_folder_button)
+        v_layout.addLayout(h_theme_folder_layout)
 
         # Загружаем сохраненную тему
         self.settings = QSettings('YourCompany', 'Text2Image')
@@ -115,12 +127,12 @@ class Txt2Img(QWidget):
         # Применяем тему
         self.apply_theme()
 
-        # Центральный виджет
+        # Устанавливаем центральный виджет
         self.setLayout(v_layout)
 
-        # Переменные для хранения данных
+        # Инициализируем переменные для хранения данных
         self.input_string = ""
-        self.color = "Цветная"
+        self.color = "Черно-белая"
         self.color_format = "RGB"
 
     def toggle_theme(self):
@@ -130,8 +142,10 @@ class Txt2Img(QWidget):
         self.apply_theme()
 
     def apply_theme(self):
+        """Применение выбранной темы"""
         if self.dark_theme:
             self.theme_button.setText("☀️ Светлая тема")
+            # Устанавливаем стили для темной темы
             self.setStyleSheet("""
                 QWidget {
                     background-color: #2b2b2b;
@@ -169,6 +183,7 @@ class Txt2Img(QWidget):
             """)
         else:
             self.theme_button.setText("🌙 Темная тема")
+            # Устанавливаем стили для светлой темы
             self.setStyleSheet("""
                 QWidget {
                     background-color: #f0f0f0;
@@ -206,6 +221,7 @@ class Txt2Img(QWidget):
             """)
 
     def loading_done(self):
+        """Метод, вызываемый по завершении загрузки"""
         pass
 
     def load_text_file(self):
@@ -231,7 +247,7 @@ class Txt2Img(QWidget):
         # Получаем значения из интерфейса
         name = self.name_input.text().strip()
         extension = self.extension_combo_box.currentText()
-        self.color = self.color_type_combo_box.currentText()
+        #self.color = self.color_type_combo_box.currentText()
         self.color_format = self.color_format_combo_box.currentText()
 
         # Преобразуем строку в массив ASCII значений
@@ -255,7 +271,7 @@ class Txt2Img(QWidget):
             time.sleep(0.01)
 
         # Создаем изображение
-        create_image_from_array(array, name, extension, self.color, self.color_format)
+        self.create_image_from_array(array, name, extension, self.color, self.color_format)
 
         # Показываем сообщение об успешном сохранении
         QMessageBox.information(self, "Успех", f"Изображение успешно создано и сохранено как {name}.{extension}.")
@@ -264,39 +280,72 @@ class Txt2Img(QWidget):
         """Обработчик закрытия окна"""
         event.accept()
 
-def create_image_from_array(data, name, extension, color, color_format):
-    """
-    data: Массив данных, представляющий пиксели изображения
-    name: Имя файла для сохранения
-    extension: Расширение файла
-    color: Тип изображения ('Цветная' или 'Черно-белая')
-    color_format: Цветовой формат ('RGB' или 'CMYK')
-    """
-    width = len(data)
-    height = 1
-    pixels = []
-    image = Image.new("RGB", (width, height))
+    def choose_output_folder(self):
+        """Метод для выбора папки сохранения"""
+        folder = QFileDialog.getExistingDirectory(self, "Выберите папку для сохранения")
+        if folder:
+            self.output_folder = folder
+            QMessageBox.information(self, "Папка выбрана", f"Изображения будут сохраняться в:\n{folder}")
 
-    if color == 'Цветная':
-        for i in range(height):
-            for j in range(width - 2):
-                r = data[j]
-                g = data[j + 1]
-                b = data[j + 2]
-                pixels.append((r, g, b))
-    elif color == 'Черно-белая':
-        for i in range(height):
-            for j in range(width):
-                r = data[j]
-                g = data[j]
-                b = data[j]
-                pixels.append((r, g, b))
+    def create_image_from_array(self, data, name, extension, color, color_format):
+        """
+        Метод для создания изображения из массива данных
+        data: Массив данных, представляющий пиксели изображения
+        name: Имя файла для сохранения
+        extension: Расширение файла
+        color: Тип изображения ('Цветная' или 'Черно-белая')
+        color_format: Цветовой формат ('RGB' или 'CMYK')
+        """
 
-    image.putdata(pixels)
-    if color_format == 'CMYK':
-        image = image.convert('CMYK')
-    image.save(f"{name}.{extension}")
-    print(f"Изображение сохранено как {name}.{extension}")
+        def find_max_factors(n):
+            max_factor1 = 1
+            max_factor2 = n
+            for i in range(2, int(n**0.5) + 1):
+                if n % i == 0:
+                    factor1 = i
+                    factor2 = n // i
+                    if factor1 > max_factor1:
+                        max_factor1 = factor1
+                        max_factor2 = factor2
+            return max_factor1, max_factor2
+
+
+        width, height = find_max_factors(len(data))
+        print(len(data))
+        print(width)
+        print(height)
+        print(width * height)
+        pixels = []
+        image = Image.new("RGB", (width, height))
+
+        if color == 'Цветная':
+            pixels.append(255)
+            pixels.append(255)
+            for i in range(height):
+                for j in range(width - 2):
+                    r = data[j * i]
+                    g = data[(j + 1) * i]
+                    b = data[(j + 2) * i]
+                    pixels.append((r, g, b))
+        elif color == 'Черно-белая':
+            for i in range(height*width):
+                #for j in range(width):
+                    r = data[i]
+                    g = data[i]
+                    b = data[i]
+                    pixels.append((r, g, b))
+
+        image.putdata(pixels)
+        if color_format == 'CMYK':
+            image = image.convert('CMYK')
+        
+        if self.output_folder:
+            save_path = os.path.join(self.output_folder, f"{name}.{extension}")
+        else:
+            save_path = f"{name}.{extension}"
+        
+        image.save(save_path)
+        print(f"Изображение сохранено как {save_path}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
